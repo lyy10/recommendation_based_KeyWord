@@ -23,8 +23,10 @@ public class KeyWords {
 	}
 	public static void computIDF(int user_id,String s,int n)
 	{
-		int Num_movies = Movies.getNumMovies();
-		
+		int Num_movies = Movies.getNumMovies();//电影总数量
+		int num_key_movies = ConnectMySql.getKeysMoviesNum(user_id, s);
+		double idf = (double)num_key_movies/(double)Num_movies;
+		IDF[n] = idf;
 	}
 	
 }

@@ -33,18 +33,35 @@ public class ConnectMySql {
          			e.printStackTrace();
          		}
     }
-    public static void getKeysMoviesNum(int user_id,String key)
+    public static int getKeysMoviesNum(int user_id,String key)
     {
     	try {
-    		
-    	}catch(ClassNotFoundException e) {
- 			System.out.println("Sorry,can`t find the Driver!"); 
- 			e.printStackTrace();}
- 		catch(SQLException e) {
+    		String sql = "select count(lyy.movies.MID) from lyy.ratings,lyy.movies where lyy.ratings.ID="+user_id+" and (lyy.ratings.MID=lyy.movies.MID and lyy.movies."+key+"=1)";
+    		ResultSet n = stmt.executeQuery(sql);
+    		n.next();
+    		int Number = n.getInt("count(lyy.movies.MID)");
+    		return Number;
+    	}catch(SQLException e) {
  			e.printStackTrace();
  		} catch(Exception e) {
  			e.printStackTrace();
  		}
+    	return -1;
+    }
+    public static int getNumMovies(int user_id)
+    {
+    	try {
+    		String sql = "select count(lyy.movies.MID) from lyy.ratings,lyy.movies where lyy.ratings.ID="+user_id+" and lyy.ratings.MID=lyy.movies.MID";
+    		ResultSet n = stmt.executeQuery(sql);
+    		n.next();
+    		int Number = n.getInt("count(lyy.movies.MID)");
+    		return Number;
+    	}catch(SQLException e) {
+ 			e.printStackTrace();
+ 		} catch(Exception e) {
+ 			e.printStackTrace();
+ 		}
+    	return -1;
     }
 //    public void getUser(User x,int item){
 //        

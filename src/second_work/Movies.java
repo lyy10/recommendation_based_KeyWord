@@ -15,5 +15,10 @@ public class Movies {
 	{
 		return Num_Movies;
 	}
+	public static void initNumMovies(int user_id)
+	{
+		Num_Movies = ConnectMySql.getNumMovies(user_id);
+	}
+	
 	
 }
