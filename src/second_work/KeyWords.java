@@ -7,6 +7,7 @@ public class KeyWords {
 	private static double[] IDF;
 	private String Words;
 	private int TF; 
+	private double TF_IDF;
 	public static void initIDF(int N)
 	{
 //		for(int i=0;i<N;i++)

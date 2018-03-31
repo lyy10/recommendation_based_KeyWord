@@ -33,53 +33,66 @@ public class ConnectMySql {
          			e.printStackTrace();
          		}
     }
-    public void getUser(User x,int item){
-        
-        try {
-        String sql;
-        
-        sql = "select count(ID) from lyy.ratings where ID="+x.getId();
-        ResultSet n = stmt.executeQuery(sql);
-        n.next();
-        int Number = n.getInt("count(ID)");
-        n.close();
-        if(Number == 0)
-        	return;
-        
-        x.setMoviesMany(Number);
-        sql = "select MID,Score from lyy.ratings ";
-        sql = sql + "where ID=" + x.getId() + " order by MID";
-        n = stmt.executeQuery(sql);
-        int i=0;
-        while(n.next())
-        {
-        	int Mid = n.getInt("MID");
-        	double S = n.getDouble("Score");
-        	x.setMoviesValue(i++, Mid, S);
-        }
-        
-        n.close();
-        if(item != -1)
-        {
-        	sql = "select ID from lyy.ratings where ID="+x.getId()+" and MID="+item;
-        	ResultSet se = stmt.executeQuery(sql);
-        	if(!se.next())
-        	{
-        		x.setId(-1);
-        		se.close();
-        		return;
-        	}
-        	se.close();
-        }
-        //conn.close();
-        }catch(SQLException e) {
-            e.printStackTrace();
-           } catch(Exception e) {
-            e.printStackTrace();
-        } 
-        
-        //System.out.println("Goodbye!");
+    public static void getKeysMoviesNum(int user_id,String key)
+    {
+    	try {
+    		
+    	}catch(ClassNotFoundException e) {
+ 			System.out.println("Sorry,can`t find the Driver!"); 
+ 			e.printStackTrace();}
+ 		catch(SQLException e) {
+ 			e.printStackTrace();
+ 		} catch(Exception e) {
+ 			e.printStackTrace();
+ 		}
     }
+//    public void getUser(User x,int item){
+//        
+//        try {
+//        String sql;
+//        
+//        sql = "select count(ID) from lyy.ratings where ID="+x.getId();
+//        ResultSet n = stmt.executeQuery(sql);
+//        n.next();
+//        int Number = n.getInt("count(ID)");
+//        n.close();
+//        if(Number == 0)
+//        	return;
+//        
+//        x.setMoviesMany(Number);
+//        sql = "select MID,Score from lyy.ratings ";
+//        sql = sql + "where ID=" + x.getId() + " order by MID";
+//        n = stmt.executeQuery(sql);
+//        int i=0;
+//        while(n.next())
+//        {
+//        	int Mid = n.getInt("MID");
+//        	double S = n.getDouble("Score");
+//        	x.setMoviesValue(i++, Mid, S);
+//        }
+//        
+//        n.close();
+//        if(item != -1)
+//        {
+//        	sql = "select ID from lyy.ratings where ID="+x.getId()+" and MID="+item;
+//        	ResultSet se = stmt.executeQuery(sql);
+//        	if(!se.next())
+//        	{
+//        		x.setId(-1);
+//        		se.close();
+//        		return;
+//        	}
+//        	se.close();
+//        }
+//        //conn.close();
+//        }catch(SQLException e) {
+//            e.printStackTrace();
+//           } catch(Exception e) {
+//            e.printStackTrace();
+//        } 
+//        
+//        //System.out.println("Goodbye!");
+//    }
     
     public void shutConnection()
     {
