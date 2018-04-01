@@ -1,5 +1,6 @@
 package second_work;
 import java.sql.*;
+import java.util.*;
 
 public class ConnectMySql {
 	// JDBC 驱动名及数据库 URL
@@ -36,10 +37,11 @@ public class ConnectMySql {
     public static int getKeysMoviesNum(int user_id,String key)
     {
     	try {
-    		String sql = "select count(lyy.movies.MID) from lyy.ratings,lyy.movies where lyy.ratings.ID="+user_id+" and (lyy.ratings.MID=lyy.movies.MID and lyy.movies."+key+"=1)";
+    		String sql = "select count(lyy.movies.MID) from lyy.u1,lyy.movies where lyy.u1.ID="+user_id+" and (lyy.u1.MID=lyy.movies.MID and lyy.movies."+key+"=1)";
     		ResultSet n = stmt.executeQuery(sql);
     		n.next();
     		int Number = n.getInt("count(lyy.movies.MID)");
+    		n.close();
     		return Number;
     	}catch(SQLException e) {
  			e.printStackTrace();
@@ -51,10 +53,11 @@ public class ConnectMySql {
     public static int getNumMovies(int user_id)
     {
     	try {
-    		String sql = "select count(lyy.movies.MID) from lyy.ratings,lyy.movies where lyy.ratings.ID="+user_id+" and lyy.ratings.MID=lyy.movies.MID";
+    		String sql = "select count(lyy.movies.MID) from lyy.u1,lyy.movies where lyy.u1.ID="+user_id+" and lyy.u1.MID=lyy.movies.MID";
     		ResultSet n = stmt.executeQuery(sql);
     		n.next();
     		int Number = n.getInt("count(lyy.movies.MID)");
+    		n.close();
     		return Number;
     	}catch(SQLException e) {
  			e.printStackTrace();
@@ -63,53 +66,90 @@ public class ConnectMySql {
  		}
     	return -1;
     }
-//    public void getUser(User x,int item){
-//        
-//        try {
-//        String sql;
-//        
-//        sql = "select count(ID) from lyy.ratings where ID="+x.getId();
-//        ResultSet n = stmt.executeQuery(sql);
-//        n.next();
-//        int Number = n.getInt("count(ID)");
-//        n.close();
-//        if(Number == 0)
-//        	return;
-//        
-//        x.setMoviesMany(Number);
-//        sql = "select MID,Score from lyy.ratings ";
-//        sql = sql + "where ID=" + x.getId() + " order by MID";
-//        n = stmt.executeQuery(sql);
-//        int i=0;
-//        while(n.next())
-//        {
-//        	int Mid = n.getInt("MID");
-//        	double S = n.getDouble("Score");
-//        	x.setMoviesValue(i++, Mid, S);
-//        }
-//        
-//        n.close();
-//        if(item != -1)
-//        {
-//        	sql = "select ID from lyy.ratings where ID="+x.getId()+" and MID="+item;
-//        	ResultSet se = stmt.executeQuery(sql);
-//        	if(!se.next())
-//        	{
-//        		x.setId(-1);
-//        		se.close();
-//        		return;
-//        	}
-//        	se.close();
-//        }
-//        //conn.close();
-//        }catch(SQLException e) {
-//            e.printStackTrace();
-//           } catch(Exception e) {
-//            e.printStackTrace();
-//        } 
-//        
-//        //System.out.println("Goodbye!");
-//    }
+    public static List<String> getItemString(int movies_id)
+    {
+    	String sql = "select Action,Adventure,Animation,Childrens,Comedy,Crime"
+    			+ ",Documentary,Drama,Fantasy,FilmNoir,Horror,Musical,Mystery,Romance,SciFi,"+
+    			"Thriller,War,Western from lyy.movies where MID="+movies_id;
+    	String[] s = {"Action","Adventure","Animation","Childrens","Comedy","Crime"
+    			,"Documentary","Drama","Fantasy","FilmNoir","Horror","Musical","Mystery","Romance","SciFi",
+    			"Thriller","War","Western"};
+    	try {
+    		ResultSet n = stmt.executeQuery(sql);
+    		int i=0;
+    		int j;
+    		List<String> re = new ArrayList<String>();
+    		n.next();
+    		while(i<s.length)
+    		{
+    			j = n.getInt(s[i]);
+    			if(j == 1)
+    				re.add(s[i]);
+    			i++;
+    		}
+    		n.close();
+    		return re;
+    	}catch(SQLException e) {
+          e.printStackTrace();
+         } catch(Exception e) {
+          e.printStackTrace();
+      }
+    	return null;
+    }
+    public static int getKeyWordsS(int movies_id,String key)
+    {
+    	try {
+    		String sql = "select "+key+" from lyy.movies where MID="+movies_id;
+    		ResultSet n = stmt.executeQuery(sql);
+    		n.next();
+    		int x = n.getInt(key);
+    		n.close();
+    		return x;
+    	}catch(SQLException e) {
+            e.printStackTrace();
+            System.out.println(key+movies_id);
+           } catch(Exception e) {
+            e.printStackTrace();
+            System.out.println(key+movies_id);
+        }
+    	return -1;
+    }
+    public static List<Integer> getMoviesId(int user_id)
+    {
+    	try {
+    		String sql = "select MID from lyy.u1 where ID="+user_id;
+    		ResultSet n = stmt.executeQuery(sql);
+    		List<Integer> id = new ArrayList<Integer>();
+    		while(n.next())
+    		{
+    			id.add(n.getInt("MID"));
+    		}
+    		n.close();
+    		return id;
+    	}catch(SQLException e) {
+            e.printStackTrace();
+           } catch(Exception e) {
+            e.printStackTrace();
+        }
+    	return null;
+    }
+    public static double getScore(int user_id,int movies_id)
+    {
+    	try {
+    		String sql = "select Score from lyy.u1 where ID="+user_id+" and MID="+movies_id;
+    		ResultSet n = stmt.executeQuery(sql);
+    		n.next();
+    		double x = n.getDouble("Score");
+    		n.close();
+    		return x;
+    	}catch(SQLException e) {
+            e.printStackTrace();
+           } catch(Exception e) {
+            e.printStackTrace();
+        }
+    	return -1;
+    }
+
     
     public void shutConnection()
     {

@@ -21,6 +21,22 @@ public class KeyWords {
 	{
 		this.TF = n;
 	}
+	public String getWords()
+	{
+		return this.Words;
+	}
+	public int getTF()
+	{
+		return this.TF;
+	}
+	public void setTFIDF(double tfidf)
+	{
+		this.TF_IDF = tfidf;
+	}
+	public double getTFIDF()
+	{
+		return this.TF_IDF;
+	}
 	public static void computIDF(int user_id,String s,int n)
 	{
 		int Num_movies = Movies.getNumMovies();//电影总数量
@@ -28,5 +44,8 @@ public class KeyWords {
 		double idf = (double)num_key_movies/(double)Num_movies;
 		IDF[n] = idf;
 	}
-	
+	public static double getIDF(int n)
+	{
+		return IDF[n];
+	}
 }
