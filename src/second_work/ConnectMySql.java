@@ -1,7 +1,9 @@
 package second_work;
+/*
+ *对数据库操作的相关函数与驱动 
+ */
 import java.sql.*;
 import java.util.*;
-
 public class ConnectMySql {
 	// JDBC 驱动名及数据库 URL
     static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";  
@@ -12,6 +14,7 @@ public class ConnectMySql {
     static final String PASS = "1010";
     private static Connection conn = null;
     private static Statement stmt = null;
+    //*****初始化连接
     public static void initConnect() 
     {
     	 try {
@@ -34,6 +37,7 @@ public class ConnectMySql {
          			e.printStackTrace();
          		}
     }
+    //*****计算关键字频率不为0的电影有多少个，用于计算IDF的n(i)
     public static int getKeysMoviesNum(int user_id,String key)
     {
     	try {
@@ -50,6 +54,7 @@ public class ConnectMySql {
  		}
     	return -1;
     }
+    //计算对应用户看来多少个电影，用于初始化电影数目
     public static int getNumMovies(int user_id)
     {
     	try {
@@ -66,6 +71,7 @@ public class ConnectMySql {
  		}
     	return -1;
     }
+    //根据单个电影的词频率不为0生成目标关键字序列
     public static List<String> getItemString(int movies_id)
     {
     	String sql = "select Action,Adventure,Animation,Childrens,Comedy,Crime"
@@ -96,6 +102,7 @@ public class ConnectMySql {
       }
     	return null;
     }
+    // 输出电影的单个关键字的词频，用与TF计算
     public static int getKeyWordsS(int movies_id,String key)
     {
     	try {
@@ -114,6 +121,7 @@ public class ConnectMySql {
         }
     	return -1;
     }
+    //生成电影集合
     public static List<Integer> getMoviesId(int user_id)
     {
     	try {
@@ -133,6 +141,7 @@ public class ConnectMySql {
         }
     	return null;
     }
+    //推荐分数获取
     public static double getScore(int user_id,int movies_id)
     {
     	try {
@@ -149,11 +158,39 @@ public class ConnectMySql {
         }
     	return -1;
     }
-
-    
+    //为了TF*IDF的单位化，计算平方和
+    public static double getItemPow(int movies_id)
+    {
+    	String sql = "select Action,Adventure,Animation,Childrens,Comedy,Crime"
+    			+ ",Documentary,Drama,Fantasy,FilmNoir,Horror,Musical,Mystery,Romance,SciFi,"+
+    			"Thriller,War,Western from lyy.movies where MID="+movies_id;
+    	String[] s = {"Action","Adventure","Animation","Childrens","Comedy","Crime"
+    			,"Documentary","Drama","Fantasy","FilmNoir","Horror","Musical","Mystery","Romance","SciFi",
+    			"Thriller","War","Western"};
+    	try {
+    		ResultSet n = stmt.executeQuery(sql);
+    		int i=0;
+    		double j=0;
+    		n.next();
+    		while(i<s.length)
+    		{
+    			j += Math.pow(n.getDouble(s[i]), 2);
+    			i++;
+    		}
+    		n.close();
+    		return j;
+    	}catch(SQLException e) {
+            e.printStackTrace();
+           } catch(Exception e) {
+            e.printStackTrace();
+        } 
+    	return -1;
+    }
+    //关闭连接
     public void shutConnection()
     {
     	try {
+    		stmt.close(); 
     		if(!conn.isClosed())
     			conn.close();
     	}catch(SQLException e) {
@@ -162,25 +199,4 @@ public class ConnectMySql {
             e.printStackTrace();
         } 
     }
-    /*
-    sql = "SELECT id, name, url FROM websites";
-    ResultSet rs = stmt.executeQuery(sql);
-    
-     	//展开结果集数据库
-    while(rs.next()){
-     //  通过字段检索
-       int id  = rs.getInt("id");
-       String name = rs.getString("name");
-       String url = rs.getString("url");
-
-       // 输出数据
-       System.out.print("ID: " + id);
-       System.out.print(", 站点名称: " + name);
-       System.out.print(", 站点 URL: " + url);
-       System.out.print("\n");
-    }
-    // 完成后关闭
-    rs.close();
-    stmt.close(); 
-    */
 }

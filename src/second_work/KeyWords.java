@@ -1,7 +1,5 @@
 package second_work;
 
-import java.util.*;
-
 //关键字对应着电影ID
 public class KeyWords {
 	private static double[] IDF;
@@ -10,8 +8,7 @@ public class KeyWords {
 	private double TF_IDF;
 	public static void initIDF(int N)
 	{
-//		for(int i=0;i<N;i++)
-			IDF = new double[N];
+		IDF = new double[N];
 	}
 	public void setWords(String w)
 	{
@@ -37,6 +34,7 @@ public class KeyWords {
 	{
 		return this.TF_IDF;
 	}
+	//计算相应关键字的IDF
 	public static void computIDF(int user_id,String s,int n)
 	{
 		int Num_movies = Movies.getNumMovies();//电影总数量

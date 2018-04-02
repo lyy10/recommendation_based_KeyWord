@@ -1,5 +1,5 @@
 package second_work;
-
+//电影类
 import java.util.List;
 
 public class Movies {
@@ -33,6 +33,7 @@ public class Movies {
 	{
 		return this.keywords[n].getTFIDF();
 	}
+	//计算对应用户的TF*IDF
 	public void initKeyWords()
 	{
 		for(int i=0;i<this.keywords.length;i++)
@@ -40,11 +41,11 @@ public class Movies {
 			keywords[i].setTF(ConnectMySql.getKeyWordsS(this.moviesid, keywords[i].getWords()));
 			keywords[i].setTFIDF(keywords[i].getTF()*KeyWords.getIDF(i));
 		}
-		double e=0;
-		for(int i=0;i<this.keywords.length;i++)
-			e = e + Math.pow(keywords[i].getTFIDF(), 2);
+		double e = ConnectMySql.getItemPow(this.moviesid);//计算IDF的平方和
+//		for(int i=0;i<this.keywords.length;i++)
+//			e = e + Math.pow(keywords[i].getTFIDF(), 2);
 		e = Math.sqrt(e);
-		for(int i=0;i<this.keywords.length;i++)
+		for(int i=0;i<this.keywords.length;i++) //单位化
 			keywords[i].setTFIDF(keywords[i].getTFIDF()/e);
 		
 	}
